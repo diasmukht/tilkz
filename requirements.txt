@@ -1,5 +1,5 @@
 whitenoise
 gunicorn
 dj-database-url
-
+requests
 Django~=5.2

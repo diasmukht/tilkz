@@ -1116,16 +1116,12 @@
 </footer><!--/.footer-->
 
 
-<!-- Кнопка открытия -->
-<button class="gpt-toggle-btn" onclick="toggleGPT()">🤖</button>
-
-<!-- Окно чата -->
-<div class="gpt-chatbox" id="gptBox" style="display: none;">
-    <div class="gpt-messages" id="gptMessages"></div>
-    <div class="gpt-input">
-        <label for="gptInput"></label><input type="text" id="gptInput" placeholder="Напишите что-нибудь...">
-        <button onclick="sendGPT()">➤</button>
-    </div>
+<div class="gpt-chat-container">
+    <div class="gpt-messages" id="gpt-messages"></div>
+    <form id="gpt-form" class="gpt-form">
+        <input type="text" id="gpt-input" placeholder="Спросите что-нибудь..." required>
+        <button type="submit">📤</button>
+    </form>
 </div>
 
 <script src="{% static 'assets/js/gpt.js' %}"></script>
