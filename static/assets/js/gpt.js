@@ -7,19 +7,24 @@ async function sendMessage() {
     chatBox.innerHTML += `<div class="user-message">${message}</div>`;
     input.value = '';
 
-    const response = await fetch('/gpt-response/', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ message })
-    });
+    try {
+        const response = await fetch('/gpt-response/', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ message })
+        });
 
-    const data = await response.json();
-    if (data.reply) {
-        chatBox.innerHTML += `<div class="gpt-message">${data.reply}</div>`;
-    } else {
-        chatBox.innerHTML += `<div class="gpt-message error">Ошибка: ${data.error}</div>`;
+        const data = await response.json();
+
+        if (data.reply) {
+            chatBox.innerHTML += `<div class="gpt-message">${data.reply}</div>`;
+        } else {
+            chatBox.innerHTML += `<div class="gpt-message error">Ошибка: ${data.error || 'нет ответа'}</div>`;
+        }
+    } catch (error) {
+        chatBox.innerHTML += `<div class="gpt-message error">Сетевая ошибка</div>`;
     }
 
     chatBox.scrollTop = chatBox.scrollHeight;
