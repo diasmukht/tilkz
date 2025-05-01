@@ -16,21 +16,31 @@ def home(request):
 
 @csrf_exempt
 def gpt_response(request):
-    if request.method == "POST":
-        data = json.loads(request.body)
-        prompt = data.get("message", "")
+    if request.method == 'POST':
+        try:
+            data = json.loads(request.body)
+            message = data.get("message")
 
-        headers = {
-            "Authorization": f"Bearer {settings.GROQ_API_KEY}",
-            "Content-Type": "application/json"
-        }
-
-        payload = {
-            "messages": [{"role": "user", "content": prompt}],
-            "model": "mixtral-8x7b-32768"
-        }
-
-        res = requests.post("https://api.groq.com/openai/v1/chat/completions", headers=headers, json=payload)
-        reply = res.json()["choices"][0]["message"]["content"]
-
-        return JsonResponse({"response": reply})
+            headers = {
+                "Authorization": f"Bearer {settings.GROQ_API_KEY}",
+                "Content-Type": "application/json"
+            }
+            payload = {
+                "model": "mixtral-8x7b-32768",
+                "messages": [
+                    {"role": "system", "content": "You are a helpful assistant."},
+                    {"role": "user", "content": message}
+                ]
+            }
+            response = requests.post(
+                "https://api.groq.com/openai/v1/chat/completions",
+                headers=headers,
+                json=payload,
+                timeout=15
+            )
+            result = response.json()
+            reply = result['choices'][0]['message']['content']
+            return JsonResponse({'reply': reply})
+        except Exception as e:
+            return JsonResponse({'error': str(e)}, status=500)
+    return JsonResponse({'error': 'Invalid request'}, status=400)

@@ -1,61 +1,63 @@
-.gpt-chat-container {
-    position: fixed;
-    bottom: 30px;
-    right: 30px;
-    width: 320px;
-    background: #fff;
+.chat-box {
+    max-width: 500px;
+    margin: 50px auto;
+    border: 2px solid #F88DB1;
     border-radius: 12px;
-    box-shadow: 0 4px 16px rgba(0,0,0,0.2);
     overflow: hidden;
-    font-family: sans-serif;
-    z-index: 9999;
+    font-family: Arial, sans-serif;
+    background-color: #fff;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
 }
-
-.gpt-messages {
-    max-height: 300px;
-    overflow-y: auto;
+.chat-messages {
     padding: 10px;
-    font-size: 14px;
+    height: 300px;
+    overflow-y: auto;
+    background: #fafafa;
 }
-
-.gpt-message {
-    margin-bottom: 10px;
-    line-height: 1.4;
-}
-
-.gpt-message.user {
-    text-align: right;
-    color: #333;
-    font-weight: bold;
-}
-
-.gpt-message.bot {
-    text-align: left;
-    color: #2c2c2c;
-}
-
-.gpt-form {
+.chat-input {
     display: flex;
     border-top: 1px solid #eee;
 }
-
-#gpt-input {
+.chat-input input {
     flex-grow: 1;
-    border: none;
     padding: 10px;
-    font-size: 14px;
+    border: none;
     outline: none;
 }
-
-.gpt-form button {
-    background: #f88db1;
-    color: #fff;
+.chat-input button {
+    padding: 10px 15px;
+    background-color: #F88DB1;
+    color: white;
     border: none;
-    padding: 0 16px;
     cursor: pointer;
-    font-size: 16px;
-    transition: 0.3s;
 }
-.gpt-form button:hover {
-    background: #e17299;
+.user-message {
+    background-color: #e1f5fe;
+    padding: 8px;
+    margin: 5px 0;
+    border-radius: 8px;
+    text-align: right;
 }
+.gpt-message {
+    background-color: #fff3e0;
+    padding: 8px;
+    margin: 5px 0;
+    border-radius: 8px;
+    text-align: left;
+}
+.gpt-message.error {
+    color: red;
+}
+.visually-hidden {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+}
+
+

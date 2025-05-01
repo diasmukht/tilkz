@@ -39,17 +39,17 @@
                 <ul>
                     <li class="select-opt">
                         <label for="language"></label><select name="language" id="language">
-                            <option value="default">EN</option>
-                            <option value="Bangla">BN</option>
-                            <option value="Arabic">AB</option>
-                        </select>
+                        <option value="default">EN</option>
+                        <option value="Bangla">BN</option>
+                        <option value="Arabic">AB</option>
+                    </select>
                     </li>
                     <li class="select-opt">
                         <label for="currency"></label><select name="currency" id="currency">
-                            <option value="usd">USD</option>
-                            <option value="euro">Euro</option>
-                            <option value="bdt">BDT</option>
-                        </select>
+                        <option value="usd">USD</option>
+                        <option value="euro">Euro</option>
+                        <option value="bdt">BDT</option>
+                    </select>
                     </li>
                     <li class="select-opt">
                         <a href="#"><span class="lnr lnr-magnifier"></span></a>
@@ -1116,13 +1116,15 @@
 </footer><!--/.footer-->
 
 
-<div class="gpt-chat-container">
-    <div class="gpt-messages" id="gpt-messages"></div>
-    <form id="gpt-form" class="gpt-form">
-        <input type="text" id="gpt-input" placeholder="Спросите что-нибудь..." required>
-        <button type="submit">📤</button>
-    </form>
+<div class="chat-box">
+    <div class="chat-messages" id="chat-messages"></div>
+    <div class="chat-input">
+        <label for="user-input" class="visually-hidden">Введите сообщение</label>
+        <input type="text" id="user-input" placeholder="Напиши что-нибудь..." autocomplete="off">
+        <button onclick="sendMessage()">➤</button>
+    </div>
 </div>
+
 
 <script src="{% static 'assets/js/gpt.js' %}"></script>
 <!-- JS в конце -->
