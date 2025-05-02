@@ -26,11 +26,72 @@
     <link rel="stylesheet" href="{% static 'assets/css/bootsnav.css' %}">
     <link rel="stylesheet" href="{% static 'assets/css/style.css' %}">
     <link rel="stylesheet" href="{% static 'assets/css/responsive.css' %}">
+    <style>
+        .quiz-toggle {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background-color: #f88db1;
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 10px;
+            cursor: pointer;
+            z-index: 1000;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+            font-weight: bold;
+        }
 
+        #quiz-box {
+            display: none;
+            position: fixed;
+            bottom: 80px;
+            right: 20px;
+            width: 350px;
+            max-height: 80vh;
+            overflow-y: auto;
+            background-color: #fff;
+            border: 2px solid #f88db1;
+            border-radius: 12px;
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
+            padding: 20px;
+            z-index: 1000;
+        }
+
+        #quiz-box h4 {
+            margin-top: 0;
+            color: #f88db1;
+            font-size: 18px;
+        }
+
+        .quiz-question {
+            margin-bottom: 10px;
+            font-weight: bold;
+        }
+
+        .quiz-options label {
+            display: block;
+            margin-bottom: 5px;
+            cursor: pointer;
+        }
+
+        .quiz-result {
+            margin-top: 20px;
+            font-weight: bold;
+            color: #333;
+        }
+    </style>
 
 </head>
 
 <body>
+
+<!-- Добавить в base.html -->
+
+
+
+
+
 <!--header-top start -->
 <header id="header-top" class="header-top">
     <ul>
@@ -115,6 +176,14 @@
 
 </section><!-- /.top-area-->
 <!-- top-area End -->
+
+<button class="quiz-toggle" onclick="toggleQuiz()">🧠 Пройдите викторину</button>
+
+<div id="quiz-box">
+    <h4>Орыс тілі бойынша викторина</h4>
+    <form id="quiz-form"></form>
+    <div class="quiz-result" id="quiz-result"></div>
+</div>
 
 <!--welcome-hero start -->
 <section id="home" class="welcome-hero">
@@ -1118,10 +1187,130 @@
 <div class="chat-box">
     <div class="chat-messages" id="chat-messages"></div>
     <div class="chat-input">
-        <input type="text" id="user-input" placeholder="Напиши что-нибудь..." autocomplete="off">
+        <label for="user-input"></label><input type="text" id="user-input" placeholder="Напиши что-нибудь..." autocomplete="off">
         <button onclick="sendMessage()">➤</button>
     </div>
 </div>
+<script>
+    const quizData = [
+        {
+            question: "'Мен оқимын' сөзі орыс тілінде қалай?",
+            options: ["Я читаю", "Я бегу", "Я пишу"],
+            answer: "Я читаю"
+        },
+        {
+            question: "'Қала' сөзінің орысша аудармасы:",
+            options: ["Село", "Город", "Деревня"],
+            answer: "Город"
+        },
+        {
+            question: "'Мектеп' сөзі орысша қалай?",
+            options: ["Школа", "Университет", "Класс"],
+            answer: "Школа"
+        },
+        {
+            question: "'Менің атым Айдана' - орысша:",
+            options: ["Меня зовут Айдана", "Я Айдана", "Я живу Айдана"],
+            answer: "Меня зовут Айдана"
+        },
+        {
+            question: "'Үй' сөзі қалай?",
+            options: ["Дом", "Хата", "Комната"],
+            answer: "Дом"
+        },
+        {
+            question: "'Ол мұғалім' - орысша:",
+            options: ["Он учитель", "Он врач", "Он студент"],
+            answer: "Он учитель"
+        },
+        {
+            question: "'Кітап' сөзі қалай?",
+            options: ["Книга", "Журнал", "Газета"],
+            answer: "Книга"
+        },
+        {
+            question: "'Ана' сөзі орысша қалай?",
+            options: ["Мама", "Сестра", "Женщина"],
+            answer: "Мама"
+        },
+        {
+            question: "'Жаз' маусымы қалай?",
+            options: ["Лето", "Осень", "Весна"],
+            answer: "Лето"
+        },
+        {
+            question: "'Мен сөйлеймін' - орысша:",
+            options: ["Я говорю", "Я думаю", "Я сижу"],
+            answer: "Я говорю"
+        }
+    ];
+
+    function toggleQuiz() {
+        const box = document.getElementById('quiz-box');
+        box.style.display = box.style.display === 'none' ? 'block' : 'none';
+        if (box.style.display === 'block') {
+            renderQuiz();
+        }
+    }
+
+    function renderQuiz() {
+        const form = document.getElementById('quiz-form');
+        form.innerHTML = '';
+        quizData.forEach((q, index) => {
+            const field = document.createElement('div');
+            field.classList.add('quiz-question-block');
+
+            const question = document.createElement('div');
+            question.className = 'quiz-question';
+            question.textContent = `${index + 1}. ${q.question}`;
+
+            const options = document.createElement('div');
+            options.className = 'quiz-options';
+
+            q.options.forEach(opt => {
+                const id = `q${index}_${opt}`;
+                options.innerHTML += `
+                <label>
+                    <input type="radio" name="q${index}" value="${opt}"> ${opt}
+                </label>`;
+            });
+
+            field.appendChild(question);
+            field.appendChild(options);
+            form.appendChild(field);
+        });
+
+        const submit = document.createElement('button');
+        submit.type = 'button';
+        submit.textContent = 'Жауаптарды тексеру';
+        submit.style = 'margin-top: 10px; background-color:#f88db1; color:white; border:none; padding:10px; border-radius:8px; cursor:pointer;';
+        submit.onclick = checkAnswers;
+        form.appendChild(submit);
+    }
+
+    function checkAnswers() {
+        let correct = 0;
+        const resultBox = document.getElementById('quiz-result');
+        resultBox.innerHTML = '';
+
+        quizData.forEach((q, i) => {
+            const answer = document.querySelector(`input[name="q${i}"]:checked`);
+            if (answer && answer.value === q.answer) {
+                correct++;
+            } else if (!answer || answer.value !== q.answer) {
+                resultBox.innerHTML += `<p><strong>${i + 1}. ${q.question}</strong><br>Дұрыс жауап: ${q.answer}</p>`;
+            }
+        });
+
+        let level = '';
+        if (correct >= 9) level = '🔝 Продвинутый деңгей';
+        else if (correct >= 5) level = '👌 Орташа деңгей';
+        else level = '🔰 Бастапқы деңгей';
+
+        resultBox.innerHTML = `<p><strong>Сіз ${correct}/10 дұрыс жауап бердіңіз.</strong><br>${level}</p>` + resultBox.innerHTML;
+    }
+</script>
+
 <script src="{% static 'assets/js/gpt.js' %}"></script>
 <!-- JS в конце -->
 <script src="{% static 'assets/js/jquery.js' %}"></script>
