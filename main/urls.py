@@ -1,9 +1,7 @@
-
-from .views import home
 from django.urls import path
-from . import views  # Импорт views из текущего приложения
+from . import views
 
 urlpatterns = [
-    path('', home, name='home'),
-    path('gpt-response/', views.gpt_response, name='gpt_response'),
+    path('courses/', views.course_list, name='course_list'),
+    path('courses/<slug:course_slug>/lesson/<int:lesson_order>/', views.lesson_detail, name='lesson_detail'),
 ]
