@@ -1,0 +1,10 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container py-4 text-center">
+    <h4>Бұл сабаққа өту үшін алдыңғы сабақты аяқтаңыз.</h4>
+    <a href="{% url 'lesson_detail' course.slug lesson.order|add:'-1' %}" class="btn btn-secondary mt-3">
+        Алдыңғы сабақты ашу
+    </a>
+</div>
+{% endblock %}
