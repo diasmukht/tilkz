@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container py-4">
+    <h2 class="mb-4">Курстар тізімі</h2>
+    <div class="row">
+        {% for course in courses %}
+        <div class="col-md-6 mb-3">
+            <div class="card shadow-sm p-3">
+                <h4>{{ course.title }}</h4>
+                <p>Тіл: {{ course.language }}</p>
+                <p>Статус: {{ course.get_status_display }}</p>
+                <a href="{% url 'lesson_detail' course.slug 1 %}" class="btn btn-primary">Кіру</a>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}
