@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container py-4">
+    <h3>Нәтиже: {{ score }}/{{ total }}</h3>
+
+    {% if passed %}
+        <p class="text-success">Құттықтаймыз! Сіз тесттен өттіңіз ✅</p>
+        <a href="{% url 'lesson_detail' course.slug lesson.order|add:'1' %}" class="btn btn-primary">
+            Келесі сабаққа өту
+        </a>
+    {% else %}
+        <p class="text-danger">Сіз жеткіліксіз ұпай жинадыңыз ❌</p>
+        <a href="{% url 'lesson_detail' course.slug lesson.order %}" class="btn btn-warning">
+            Қайталап көру
+        </a>
+    {% endif %}
+</div>
+{% endblock %}
