@@ -1,0 +1,9 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container py-5 text-center">
+    <h4>Бұл курс тек advanced қолданушылар үшін қолжетімді.</h4>
+    <p>Жазылымыңызды жаңартып, курсқа қол жеткізе аласыз.</p>
+    <a href="{% url 'profile' %}" class="btn btn-outline-primary mt-3">Профильге өту</a>
+</div>
+{% endblock %}
