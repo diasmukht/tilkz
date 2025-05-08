@@ -1,48 +1,57 @@
-from django.contrib.sites import requests
-from django.shortcuts import render
+from django.shortcuts import render, get_object_or_404, redirect
+from .models import Course, Lesson, Question, Answer, PassedLesson
+from django.contrib.auth.decorators import login_required
+from django.db.models import Count
+
+@login_required
+def course_list(request):
+    courses = Course.objects.all()
+    return render(request, 'main/course_list.html', {'courses': courses})
 
 
+@login_required
+def lesson_detail(request, course_slug, lesson_order):
+    course = get_object_or_404(Course, slug=course_slug)
+    
+    if course.status == 'advanced' and request.user.profile.status != 'advanced':
+        return render(request, 'main/access_denied.html')
 
+    lesson = get_object_or_404(Lesson, course=course, order=lesson_order)
 
-def home(request):
-    return render(request, 'index.html')
+    # Алдыңғы сабақ өтілген бе?
+    if lesson.order > 1:
+        prev_lesson = Lesson.objects.get(course=course, order=lesson.order - 1)
+        passed = PassedLesson.objects.filter(user=request.user, lesson=prev_lesson, passed=True).exists()
+        if not passed:
+            return render(request, 'main/locked_lesson.html', {'lesson': prev_lesson})
 
-GROQ_API_KEY = "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"
+    questions = Question.objects.filter(lesson=lesson).prefetch_related('answer_set')
 
-
-
-import json
-import requests
-from django.http import JsonResponse
-from django.views.decorators.csrf import csrf_exempt
-from django.conf import settings
-
-@csrf_exempt
-def gpt_response(request):
     if request.method == 'POST':
-        try:
-            data = json.loads(request.body)
-            user_message = data.get('message', '')
+        score = 0
+        total = questions.count()
+        for question in questions:
+            selected_id = request.POST.get(f"question_{question.id}")
+            if selected_id:
+                answer = Answer.objects.get(id=selected_id)
+                if answer.is_correct:
+                    score += 1
+        passed = score >= int(0.8 * total)
 
-            headers = {
-                'Authorization': f'Bearer {settings.GROQ_API_KEY}',
-                'Content-Type': 'application/json',
-            }
-            payload = {
-                "messages": [{"role": "user", "content": user_message}],
-                "model": "mixtral-8x7b-32768"
-            }
+        PassedLesson.objects.update_or_create(
+            user=request.user,
+            lesson=lesson,
+            defaults={'passed': passed}
+        )
+        return render(request, 'main/test_result.html', {
+            'lesson': lesson,
+            'score': score,
+            'total': total,
+            'passed': passed
+        })
 
-            res = requests.post("https://api.groq.com/openai/v1/chat/completions", headers=headers, json=payload)
-            res_json = res.json()
-
-            if 'choices' in res_json and len(res_json['choices']) > 0:
-                reply = res_json['choices'][0]['message']['content']
-                return JsonResponse({"reply": reply})
-            else:
-                return JsonResponse({"error": "GPT не ответил."}, status=500)
-
-        except Exception as e:
-            return JsonResponse({"error": str(e)}, status=500)
-
-    return JsonResponse({"error": "POST required."}, status=400)
+    return render(request, 'main/lesson_detail.html', {
+        'course': course,
+        'lesson': lesson,
+        'questions': questions
+    })
